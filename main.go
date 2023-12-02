@@ -55,6 +55,8 @@ func main() {
 	var animation js.Func
 	animation = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		clearCanvas()
+		e.SetHeight(bodyH)
+		e.SetWidth(bodyW)
 		e.Update()
 		for _, goid := range e.Goids() {
 			drawImage(goid.Position().X, goid.Position().Y, goid.ImageType())

@@ -59,3 +59,11 @@ func (e Environment) Width() float64 {
 func (e Environment) Height() float64 {
 	return e.height
 }
+
+func (e *Environment) SetWidth(width float64) {
+	e.width = width
+}
+
+func (e *Environment) SetHeight(height float64) {
+	e.height = height
+}
