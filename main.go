@@ -16,8 +16,8 @@ func main() {
 	canvasEl.Set("width", bodyW)
 	canvasEl.Set("height", bodyH)
 	window.Call("addEventListener", "resize", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		bodyW := window.Get("innerWidth").Float()
-		bodyH := window.Get("innerHeight").Float()
+		bodyW = window.Get("innerWidth").Float()
+		bodyH = window.Get("innerHeight").Float()
 		canvasEl.Set("width", bodyW)
 		canvasEl.Set("height", bodyH)
 		return nil
@@ -36,6 +36,7 @@ func main() {
 
 	clearCanvas := func() {
 		ctx := canvasEl.Call("getContext", "2d")
+
 		ctx.Call("clearRect", 0, 0, bodyW, bodyH)
 	}
 
@@ -45,8 +46,9 @@ func main() {
 		t += 1
 		t = math.Mod(t, 360)
 		clearCanvas()
-		x := bodyW/4*math.Sin(t*math.Pi/180) + bodyW/2
-		y := bodyH/4*math.Sin(2*t*math.Pi/180) + bodyH/2
+		v := math.Sqrt(bodyW*bodyW + 4*bodyH*bodyH) / 4
+		x := bodyW/4*math.Sin(t*math.Pi/180)*500/v + bodyW/2
+		y := bodyH/4*math.Sin(2*t*math.Pi/180)*500/v + bodyH/2
 		renderTriangle(x, y)
 		window.Call("requestAnimationFrame", animation)
 		return nil
