@@ -4,7 +4,7 @@
 
 ## 概要
 
-https://github.com/hamao0820/goidsをwebで遊べるようにwasmを使って移植しました。
+https://github.com/hamao0820/goids を web で遊べるように wasm を使って移植しました。
 
 ## 遊び方
 
