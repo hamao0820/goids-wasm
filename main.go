@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"syscall/js"
 )
 
@@ -38,13 +39,21 @@ func main() {
 		ctx.Call("clearRect", 0, 0, bodyW, bodyH)
 	}
 
-	canvasEl.Call("addEventListener", "mousemove", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	t := 0.0
+	var animation js.Func
+	animation = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		t += 1
+		t = math.Mod(t, 360)
 		clearCanvas()
-		x := args[0].Get("clientX").Float()
-		y := args[0].Get("clientY").Float()
+		x := bodyW/4*math.Sin(t*math.Pi/180) + bodyW/2
+		y := bodyH/4*math.Sin(2*t*math.Pi/180) + bodyH/2
 		renderTriangle(x, y)
+		window.Call("requestAnimationFrame", animation)
 		return nil
-	}))
+	})
+	defer animation.Release()
+
+	window.Call("requestAnimationFrame", animation)
 
 	<-c
 }
