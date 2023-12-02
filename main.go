@@ -1,15 +1,29 @@
 package main
 
 import (
+	"fmt"
 	"syscall/js"
 )
 
 func main() {
-	doc := js.Global().Get("document")
-	canvasEl := js.Global().Get("document").Call("getElementById", "canvas")
+	c := make(chan struct{})
+	window := js.Global()
+	document := window.Get("document")
+	canvasEl := document.Call("getElementById", "canvas")
 
-	bodyW := doc.Get("body").Get("clientWidth").Float()
-	bodyH := doc.Get("body").Get("clientHeight").Float()
+	bodyW := window.Get("innerWidth").Float()
+	bodyH := window.Get("innerHeight").Float()
+	fmt.Println(bodyW, bodyH)
 	canvasEl.Set("width", bodyW)
 	canvasEl.Set("height", bodyH)
+	window.Call("addEventListener", "resize", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		bodyW := window.Get("innerWidth").Float()
+		bodyH := window.Get("innerHeight").Float()
+		fmt.Println(bodyW, bodyH)
+		canvasEl.Set("width", bodyW)
+		canvasEl.Set("height", bodyH)
+		return nil
+	}))
+
+	<-c
 }
