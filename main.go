@@ -52,6 +52,13 @@ func main() {
 		}))
 	}
 
+	canvasEl.Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		x := args[0].Get("clientX").Float()
+		y := args[0].Get("clientY").Float()
+		e.AddGoid(goids.NewGoid(goids.CreateVector(x, y), e.GoidsNum(), 4, 2, 100))
+		return nil
+	}))
+
 	var animation js.Func
 	animation = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		clearCanvas()

@@ -1,5 +1,7 @@
 package goids
 
+import "math/rand"
+
 type Environment struct {
 	width  float64
 	height float64
@@ -9,7 +11,8 @@ type Environment struct {
 func CreateEnv(width, height float64, n int, maxSpeed, maxForce float64, sight float64) Environment {
 	goids := make([]Goid, n)
 	for i := range goids {
-		goids[i] = NewGoid(width, height, i, maxSpeed, maxForce, sight)
+		position := CreateVector(rand.Float64()*width, rand.Float64()*height)
+		goids[i] = NewGoid(position, i, maxSpeed, maxForce, sight)
 	}
 
 	return Environment{width: width, height: height, goids: goids}
@@ -45,4 +48,8 @@ func (e *Environment) SetWidth(width float64) {
 
 func (e *Environment) SetHeight(height float64) {
 	e.height = height
+}
+
+func (e *Environment) AddGoid(g Goid) {
+	e.goids = append(e.goids, g)
 }
