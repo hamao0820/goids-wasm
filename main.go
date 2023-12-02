@@ -31,7 +31,8 @@ func main() {
 
 	ctx := canvasEl.Call("getContext", "2d")
 
-	e := goids.CreateEnv(bodyW, bodyH, 30, 4, 2, 100)
+	setting := NewSetting()
+	e := goids.CreateEnv(bodyW, bodyH, setting.goidsNum, setting.maxSpeed, setting.maxForce, setting.sight)
 
 	drawImage := func(x, y float64, t goids.ImageType) {
 		img := window.Get("Image").New()
@@ -55,7 +56,7 @@ func main() {
 	canvasEl.Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		x := args[0].Get("clientX").Float()
 		y := args[0].Get("clientY").Float()
-		e.AddGoid(goids.NewGoid(goids.CreateVector(x, y), e.GoidsNum(), 4, 2, 100))
+		e.AddGoid(goids.NewGoid(goids.CreateVector(x, y), setting.maxSpeed, setting.maxForce, setting.sight))
 		return nil
 	}))
 

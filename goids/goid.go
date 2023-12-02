@@ -25,7 +25,7 @@ type Goid struct {
 	imageType    ImageType
 }
 
-func NewGoid(position Vector, n int, maxSpeed, maxForce float64, sight float64) Goid {
+func NewGoid(position Vector, maxSpeed, maxForce float64, sight float64) Goid {
 	velocity := CreateVector(rand.Float64()*2-1, rand.Float64()*2-1)
 	velocity.Scale(rand.Float64()*4 - rand.Float64()*2)
 

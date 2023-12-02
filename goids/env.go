@@ -12,7 +12,7 @@ func CreateEnv(width, height float64, n int, maxSpeed, maxForce float64, sight f
 	goids := make([]Goid, n)
 	for i := range goids {
 		position := CreateVector(rand.Float64()*width, rand.Float64()*height)
-		goids[i] = NewGoid(position, i, maxSpeed, maxForce, sight)
+		goids[i] = NewGoid(position, maxSpeed, maxForce, sight)
 	}
 
 	return Environment{width: width, height: height, goids: goids}
