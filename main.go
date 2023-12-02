@@ -61,15 +61,33 @@ func main() {
 	}))
 
 	var mouse goids.Vector
-	canvasEl.Call("addEventListener", "mousemove", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		x := args[0].Get("clientX").Float()
-		y := args[0].Get("clientY").Float()
-		mouse = goids.CreateVector(x, y)
+	canvasEl.Call("addEventListener", "pointermove", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		mouse.X = args[0].Get("clientX").Float()
+		mouse.Y = args[0].Get("clientY").Float()
 		return nil
 	}))
 
-	canvasEl.Call("addEventListener", "mouseout", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		mouse = goids.CreateVector(-1, -1)
+	canvasEl.Call("addEventListener", "touchmove", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		mouse.X = args[0].Get("touches").Index(0).Get("clientX").Float()
+		mouse.Y = args[0].Get("touches").Index(0).Get("clientY").Float()
+		return nil
+	}))
+
+	canvasEl.Call("addEventListener", "pointerleave", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		mouse.X = -1
+		mouse.Y = -1
+		return nil
+	}))
+
+	canvasEl.Call("addEventListener", "pointerup", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		mouse.X = -1
+		mouse.Y = -1
+		return nil
+	}))
+
+	canvasEl.Call("addEventListener", "touchend", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		mouse.X = -1
+		mouse.Y = -1
 		return nil
 	}))
 
