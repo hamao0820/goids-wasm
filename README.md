@@ -1,5 +1,7 @@
 # boids algorithm with Go and WebAssembly
 
+![goid](./goid.jpg)
+
 ## 概要
 
 https://github.com/hamao0820/goidsをwebで遊べるようにwasmを使って移植しました。
