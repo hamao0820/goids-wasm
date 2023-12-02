@@ -1,10 +1,9 @@
 package goids
 
 type Environment struct {
-	width    float64
-	height   float64
-	goidsNum int
-	goids    []Goid
+	width  float64
+	height float64
+	goids  []Goid
 }
 
 func CreateEnv(width, height float64, n int, maxSpeed, maxForce float64, sight float64) Environment {
@@ -13,7 +12,7 @@ func CreateEnv(width, height float64, n int, maxSpeed, maxForce float64, sight f
 		goids[i] = NewGoid(width, height, i, maxSpeed, maxForce, sight)
 	}
 
-	return Environment{width: width, height: height, goidsNum: n, goids: goids}
+	return Environment{width: width, height: height, goids: goids}
 }
 
 func (e *Environment) Update() {
@@ -29,7 +28,7 @@ func (e Environment) Goids() []Goid {
 }
 
 func (e Environment) GoidsNum() int {
-	return e.goidsNum
+	return len(e.goids)
 }
 
 func (e Environment) Width() float64 {
