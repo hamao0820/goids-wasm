@@ -1,6 +1,9 @@
 package goids
 
-import "math"
+import (
+	"math"
+	"math/rand"
+)
 
 type ImageType int
 
@@ -20,6 +23,26 @@ type Goid struct {
 	maxForce     float64
 	sight        float64
 	imageType    ImageType
+}
+
+func NewGoid(width, height float64, n int, maxSpeed, maxForce float64, sight float64) Goid {
+	position := CreateVector(rand.Float64()*width, rand.Float64()*height)
+	velocity := CreateVector(rand.Float64()*2-1, rand.Float64()*2-1)
+	velocity.Scale(rand.Float64()*4 - rand.Float64()*2)
+
+	var t ImageType
+
+	r := rand.Float64()
+
+	if r < 0.001 { // 0.1%
+		t = Pink
+	} else if r < 0.011 { // 1%
+		t = Side
+	} else {
+		t = Front
+	}
+
+	return Goid{position: position, velocity: velocity, maxSpeed: float64(maxSpeed), maxForce: float64(maxForce), sight: sight, imageType: t}
 }
 
 func (g *Goid) Seek(t Vector) {
