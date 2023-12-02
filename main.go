@@ -1,7 +1,6 @@
 package main
 
 import (
-	"math"
 	"syscall/js"
 )
 
@@ -23,39 +22,16 @@ func main() {
 		return nil
 	}))
 
-	renderTriangle := func(x, y float64) {
-		ctx := canvasEl.Call("getContext", "2d")
-		ctx.Call("beginPath")
-		ctx.Call("moveTo", x, y)
-		ctx.Call("lineTo", x+50, y+25)
-		ctx.Call("lineTo", x+50, y-25)
-		ctx.Set("fillStyle", "#ff0000")
-		ctx.Call("fill")
-		ctx.Call("closePath")
-	}
+	ctx := canvasEl.Call("getContext", "2d")
 
-	clearCanvas := func() {
-		ctx := canvasEl.Call("getContext", "2d")
-
-		ctx.Call("clearRect", 0, 0, bodyW, bodyH)
-	}
-
-	t := 0.0
-	var animation js.Func
-	animation = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		t += 1
-		t = math.Mod(t, 360)
-		clearCanvas()
-		v := math.Sqrt(bodyW*bodyW + 4*bodyH*bodyH) / 4
-		x := bodyW/4*math.Sin(t*math.Pi/180)*500/v + bodyW/2
-		y := bodyH/4*math.Sin(2*t*math.Pi/180)*500/v + bodyH/2
-		renderTriangle(x, y)
-		window.Call("requestAnimationFrame", animation)
+	image := window.Get("Image").New()
+	image.Set("src", "images/gopher-front.png")
+	image.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		imageWidth := image.Get("width").Float()
+		imageHeight := image.Get("height").Float()
+		ctx.Call("drawImage", image, bodyW/2-imageWidth/2, bodyH/2-imageHeight/2)
 		return nil
-	})
-	defer animation.Release()
-
-	window.Call("requestAnimationFrame", animation)
+	}))
 
 	<-c
 }
