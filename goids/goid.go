@@ -108,10 +108,22 @@ func (g *Goid) Cohesive(goids []Goid) {
 	}
 }
 
-func (g *Goid) Flock(goids []Goid) {
+func (g *Goid) AvoidMouse(mouse Vector) {
+	if mouse.X < 0 || mouse.Y < 0 {
+		return
+	}
+	d := Sub(g.position, mouse).Len()
+	if d < 100 {
+		g.acceleration.ScalarMul(0)
+		g.Flee(mouse)
+	}
+}
+
+func (g *Goid) Flock(goids []Goid, mouse Vector) {
 	g.Align(goids)
 	g.Separate(goids)
 	g.Cohesive(goids)
+	g.AvoidMouse(mouse)
 }
 
 func (g *Goid) AdjustEdge(width, height float64) {

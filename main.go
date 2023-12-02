@@ -59,12 +59,25 @@ func main() {
 		return nil
 	}))
 
+	var mouse goids.Vector
+	canvasEl.Call("addEventListener", "mousemove", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		x := args[0].Get("clientX").Float()
+		y := args[0].Get("clientY").Float()
+		mouse = goids.CreateVector(x, y)
+		return nil
+	}))
+
+	canvasEl.Call("addEventListener", "mouseout", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		mouse = goids.CreateVector(-1, -1)
+		return nil
+	}))
+
 	var animation js.Func
 	animation = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		clearCanvas()
 		e.SetHeight(bodyH)
 		e.SetWidth(bodyW)
-		e.Update()
+		e.Update(mouse)
 		for _, goid := range e.Goids() {
 			drawImage(goid.Position().X, goid.Position().Y, goid.ImageType())
 		}

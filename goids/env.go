@@ -18,10 +18,10 @@ func CreateEnv(width, height float64, n int, maxSpeed, maxForce float64, sight f
 	return Environment{width: width, height: height, goids: goids}
 }
 
-func (e *Environment) Update() {
+func (e *Environment) Update(mouse Vector) {
 	for i := 0; i < len(e.goids); i++ {
 		goid := &e.goids[i]
-		goid.Flock(e.goids)
+		goid.Flock(e.goids, mouse)
 		goid.Update(e.width, e.height)
 	}
 }
