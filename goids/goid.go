@@ -119,3 +119,11 @@ func (g *Goid) Update(width, height float64) {
 
 	g.AdjustEdge(width, height)
 }
+
+func (g Goid) Position() Vector {
+	return g.position
+}
+
+func (g Goid) ImageType() ImageType {
+	return g.imageType
+}

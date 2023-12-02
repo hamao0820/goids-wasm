@@ -1,8 +1,9 @@
 package main
 
 import (
-	"math"
 	"syscall/js"
+
+	"github.com/hamao0820/goids-wasm/goids"
 )
 
 func main() {
@@ -30,26 +31,35 @@ func main() {
 
 	ctx := canvasEl.Call("getContext", "2d")
 
-	drawImage := func(x, y float64) {
+	e := goids.CreateEnv(bodyW, bodyH, 30, 4, 2, 100)
+
+	drawImage := func(x, y float64, t goids.ImageType) {
 		img := window.Get("Image").New()
-		img.Set("src", "images/gopher-front.png")
+		switch t {
+		case goids.Pink:
+			img.Set("src", "images/gopher-pink.png")
+		case goids.Side:
+			img.Set("src", "images/gopher-side.png")
+		default:
+			img.Set("src", "images/gopher-front.png")
+		}
 		imageWidth := img.Get("width").Float()
 		imageHeight := img.Get("height").Float()
-		ctx.Call("drawImage", img, x-imageWidth/2, y-imageHeight/2)
+		resizeRatio := float64(goids.GopherSize) / imageHeight
+		ctx.Call("drawImage", img, x-imageWidth*resizeRatio/2, y-imageHeight*resizeRatio/2, imageWidth*resizeRatio, imageHeight*resizeRatio)
 		img.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 			return nil
 		}))
 	}
 
-	t := 0.0
 	var animation js.Func
 	animation = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		t += 1
-		t = math.Mod(t, 360)
 		clearCanvas()
-		x := bodyW/4*math.Sin(t*math.Pi/180) + bodyW/2
-		y := bodyH/4*math.Sin(2*t*math.Pi/180) + bodyH/2
-		drawImage(x, y)
+		e.Update()
+		for _, goid := range e.Goids() {
+			drawImage(goid.Position().X, goid.Position().Y, goid.ImageType())
+		}
+
 		window.Call("requestAnimationFrame", animation)
 		return nil
 	})
