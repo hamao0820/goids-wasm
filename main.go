@@ -38,7 +38,7 @@ func main() {
 		ctx.Call("clearRect", 0, 0, bodyW, bodyH)
 	}
 
-	canvasEl.Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	canvasEl.Call("addEventListener", "mousemove", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		clearCanvas()
 		x := args[0].Get("clientX").Float()
 		y := args[0].Get("clientY").Float()
