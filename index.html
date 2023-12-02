@@ -4,12 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="wasm_exec.js"></script>
+    <script>
+      const go = new Go();
+      WebAssembly.instantiateStreaming(
+        fetch("main.wasm"),
+        go.importObject
+      ).then((result) => {
+        go.run(result.instance);
+      });
+      function increment(value) {
+        ret = goIncrement(value);
+      }
+    </script>
     <link rel="stylesheet" href="style.css" type="text/css" />
     <title>goids</title>
   </head>
   <body>
-    <body>
+    <div class="container">
       <canvas id="canvas"></canvas>
-    </body>
+    </div>
   </body>
 </html>
