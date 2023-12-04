@@ -76,11 +76,8 @@ func (g *Goid) Align(neighbors []Goid) {
 	}
 }
 
-func (g *Goid) Separate(goids []Goid) {
-	for _, other := range goids {
-		if g == &other || !g.IsInsight(other) {
-			continue
-		}
+func (g *Goid) Separate(neighbors []Goid) {
+	for _, other := range neighbors {
 		d := Sub(g.position, other.position).Len()
 		if d < 50 {
 			g.Flee(other.position)
@@ -124,7 +121,7 @@ func (g *Goid) Flock(goids []Goid, mouse Vector) {
 		neighbors = append(neighbors, other)
 	}
 	g.Align(neighbors)
-	g.Separate(goids)
+	g.Separate(neighbors)
 	g.Cohesive(goids)
 	g.AvoidMouse(mouse)
 }
