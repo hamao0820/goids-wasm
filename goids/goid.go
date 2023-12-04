@@ -85,15 +85,11 @@ func (g *Goid) Separate(neighbors []Goid) {
 	}
 }
 
-func (g *Goid) Cohesive(goids []Goid) {
+func (g *Goid) Cohesive(neighbors []Goid) {
 	var avgPos Vector
-	n := 0
-	for _, other := range goids {
-		if g == &other || !g.IsInsight(other) {
-			continue
-		}
+	n := len(neighbors)
+	for _, other := range neighbors {
 		avgPos.Add(other.position)
-		n++
 	}
 	if n > 0 {
 		avgPos.ScalarMul(1 / float64(n))
@@ -122,7 +118,7 @@ func (g *Goid) Flock(goids []Goid, mouse Vector) {
 	}
 	g.Align(neighbors)
 	g.Separate(neighbors)
-	g.Cohesive(goids)
+	g.Cohesive(neighbors)
 	g.AvoidMouse(mouse)
 }
 
