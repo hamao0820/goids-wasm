@@ -34,23 +34,59 @@ func main() {
 	setting := NewSetting()
 	e := goids.CreateEnv(bodyW, bodyH, setting.goidsNum, setting.maxSpeed, setting.maxForce, setting.sight)
 
-	drawImage := func(x, y float64, t goids.ImageType) {
-		img := window.Get("Image").New()
-		switch t {
-		case goids.Pink:
-			img.Set("src", "images/gopher-pink.png")
-		case goids.Side:
-			img.Set("src", "images/gopher-side.png")
-		default:
-			img.Set("src", "images/gopher-front.png")
-		}
-		imageWidth := img.Get("width").Float()
-		imageHeight := img.Get("height").Float()
+	offScreenCanvasFront := document.Call("createElement", "canvas")
+	offScreenCanvasSide := document.Call("createElement", "canvas")
+	offScreenCanvasPink := document.Call("createElement", "canvas")
+	imgFront := window.Get("Image").New()
+	imgSide := window.Get("Image").New()
+	imgPink := window.Get("Image").New()
+
+	imgFront.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		imageWidth := imgFront.Get("width").Float()
+		imageHeight := imgFront.Get("height").Float()
 		resizeRatio := float64(goids.GopherSize) / imageHeight
-		ctx.Call("drawImage", img, x-imageWidth*resizeRatio/2, y-imageHeight*resizeRatio/2, imageWidth*resizeRatio, imageHeight*resizeRatio)
-		img.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-			return nil
-		}))
+		offScreenCanvasFront.Set("width", imageWidth*resizeRatio)
+		offScreenCanvasFront.Set("height", imageHeight*resizeRatio)
+		offScreenCtxFront := offScreenCanvasFront.Call("getContext", "2d")
+		offScreenCtxFront.Call("drawImage", imgFront, 0, 0, imageWidth*resizeRatio, imageHeight*resizeRatio)
+		return nil
+	}))
+
+	imgSide.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		imageWidth := imgSide.Get("width").Float()
+		imageHeight := imgSide.Get("height").Float()
+		resizeRatio := float64(goids.GopherSize) / imageHeight
+		offScreenCanvasSide.Set("width", imageWidth*resizeRatio)
+		offScreenCanvasSide.Set("height", imageHeight*resizeRatio)
+		offScreenCtxSide := offScreenCanvasSide.Call("getContext", "2d")
+		offScreenCtxSide.Call("drawImage", imgSide, 0, 0, imageWidth*resizeRatio, imageHeight*resizeRatio)
+		return nil
+	}))
+
+	imgPink.Call("addEventListener", "load", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		imageWidth := imgPink.Get("width").Float()
+		imageHeight := imgPink.Get("height").Float()
+		resizeRatio := float64(goids.GopherSize) / imageHeight
+		offScreenCanvasPink.Set("width", imageWidth*resizeRatio)
+		offScreenCanvasPink.Set("height", imageHeight*resizeRatio)
+		offScreenCtxPink := offScreenCanvasPink.Call("getContext", "2d")
+		offScreenCtxPink.Call("drawImage", imgPink, 0, 0, imageWidth*resizeRatio, imageHeight*resizeRatio)
+		return nil
+	}))
+
+	imgFront.Set("src", "images/gopher-front.png")
+	imgSide.Set("src", "images/gopher-side.png")
+	imgPink.Set("src", "images/gopher-pink.png")
+
+	drawImage := func(x, y float64, t goids.ImageType) {
+		switch t {
+		case goids.Front:
+			ctx.Call("drawImage", offScreenCanvasFront, x-offScreenCanvasFront.Get("width").Float()/2, y-offScreenCanvasFront.Get("height").Float()/2)
+		case goids.Side:
+			ctx.Call("drawImage", offScreenCanvasSide, x-offScreenCanvasSide.Get("width").Float()/2, y-offScreenCanvasSide.Get("height").Float()/2)
+		case goids.Pink:
+			ctx.Call("drawImage", offScreenCanvasPink, x-offScreenCanvasPink.Get("width").Float()/2, y-offScreenCanvasPink.Get("height").Float()/2)
+		}
 	}
 
 	canvasEl.Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
