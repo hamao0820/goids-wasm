@@ -108,7 +108,7 @@ func (g *Goid) AvoidMouse(mouse Vector) {
 	}
 }
 
-func (g *Goid) Flock(goids []Goid, mouse Vector) {
+func (g *Goid) neighbors(goids []Goid) []Goid {
 	neighbors := make([]Goid, 0)
 	for _, other := range goids {
 		if g == &other || !g.IsInsight(other) {
@@ -116,6 +116,11 @@ func (g *Goid) Flock(goids []Goid, mouse Vector) {
 		}
 		neighbors = append(neighbors, other)
 	}
+	return neighbors
+}
+
+func (g *Goid) Flock(goids []Goid, mouse Vector) {
+	neighbors := g.neighbors(goids)
 	g.Align(neighbors)
 	g.Separate(neighbors)
 	g.Cohesive(neighbors)
