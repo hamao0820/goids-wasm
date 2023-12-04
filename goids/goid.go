@@ -63,15 +63,11 @@ func (g Goid) IsInsight(g2 Goid) bool {
 	return d < g.sight
 }
 
-func (g *Goid) Align(goids []Goid) {
+func (g *Goid) Align(neighbors []Goid) {
 	var avgVel Vector
-	n := 0
-	for _, other := range goids {
-		if g == &other || !g.IsInsight(other) {
-			continue
-		}
+	n := len(neighbors)
+	for _, other := range neighbors {
 		avgVel.Add(other.velocity)
-		n++
 	}
 	if n > 0 {
 		avgVel.ScalarMul(1 / float64(n))
@@ -120,7 +116,14 @@ func (g *Goid) AvoidMouse(mouse Vector) {
 }
 
 func (g *Goid) Flock(goids []Goid, mouse Vector) {
-	g.Align(goids)
+	neighbors := make([]Goid, 0)
+	for _, other := range goids {
+		if g == &other || !g.IsInsight(other) {
+			continue
+		}
+		neighbors = append(neighbors, other)
+	}
+	g.Align(neighbors)
 	g.Separate(goids)
 	g.Cohesive(goids)
 	g.AvoidMouse(mouse)
