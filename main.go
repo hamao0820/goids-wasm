@@ -24,11 +24,6 @@ func main() {
 		return nil
 	}))
 
-	clearCanvas := func() {
-		ctx := canvasEl.Call("getContext", "2d")
-		ctx.Call("clearRect", 0, 0, bodyW, bodyH)
-	}
-
 	ctx := canvasEl.Call("getContext", "2d")
 
 	setting := NewSetting()
@@ -129,7 +124,7 @@ func main() {
 
 	var animation js.Func
 	animation = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		clearCanvas()
+		ctx.Call("clearRect", 0, 0, bodyW, bodyH)
 		e.SetHeight(bodyH)
 		e.SetWidth(bodyW)
 		e.Update(mouse)
